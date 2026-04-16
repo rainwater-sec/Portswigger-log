@@ -1,6 +1,6 @@
 import requests
 
-URL = "https://0a5200d70462afc780c82195000900c2.web-security-academy.net/login"
+URL = "0a1c000f04e725b280e1357600e700fe.web-security-academy.net"
 
 with open("passwords.txt", "r") as f:
     passwords = f.read().splitlines()

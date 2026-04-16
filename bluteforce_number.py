@@ -1,10 +1,10 @@
 import requests
 
-base_url = 'https://0ab500160466127881e2844000940031.web-security-academy.net'
+base_url = 'https://0a8400bf034cf9958078764300c60095.web-security-academy.net/'
 login2_url = f'{base_url}/login2'
 
 cookies = {
-    'session':'wpAddwvwIP7bSylrFYKKsIfPoTF0BPXs',
+    'session':'jgQfwcITErWTHFNcJAvImyJDR43o7Ihv',
     'verify':'carlos'
 }
 
